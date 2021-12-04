@@ -1,81 +1,60 @@
 use std::io::{BufRead, BufReader};
-use std::str::FromStr;
 
-#[derive(Debug, Clone)]
-struct ParseCommandError(String);
+fn part1(report: &Vec<String>) -> i64 {
+    let num_bits = report[0].len();
+    assert!(report.iter().all(|x| x.len() == num_bits));
 
-#[derive(Debug, Clone, Copy)]
-enum Command {
-    Forward(i64),
-    Down(i64),
-    Up(i64),
-}
-
-impl FromStr for Command {
-    type Err = ParseCommandError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let parts: Vec<&str> = s.split(' ').collect();
-        let val = parts[1]
-            .parse()
-            .map_err(|_| ParseCommandError(s.to_string()))?;
-
-        match parts[0] {
-            "forward" => Ok(Command::Forward(val)),
-            "down" => Ok(Command::Down(val)),
-            "up" => Ok(Command::Up(val)),
-            _ => Err(ParseCommandError(s.to_string())),
-        }
-    }
-}
-
-struct Position {
-    horizontal: i64,
-    depth: i64,
-    aim: i64,
-}
-
-impl Position {
-    pub fn new() -> Self {
-        Position {
-            horizontal: 0,
-            depth: 0,
-            aim: 0,
+    let mut freq = vec![0; num_bits];
+    for diag in report.iter() {
+        for i in 0..num_bits {
+            if diag.bytes().nth(i) == Some(b'1') {
+                freq[i] += 1;
+            }
         }
     }
 
-    pub fn part1(&self) -> i64 {
-        self.horizontal * self.aim
-    }
-
-    pub fn part2(&self) -> i64 {
-        self.horizontal * self.depth
-    }
-
-    fn update(&self, cmd: Command) -> Self {
-        match cmd {
-            Command::Forward(f) => Self {
-                horizontal: self.horizontal + f,
-                depth: self.depth + self.aim * f,
-                aim: self.aim,
-            },
-            Command::Down(d) => Self {
-                horizontal: self.horizontal,
-                depth: self.depth,
-                aim: self.aim + d,
-            },
-            Command::Up(u) => Self {
-                horizontal: self.horizontal,
-                depth: self.depth,
-                aim: self.aim - u,
-            },
+    let mut ans = 0;
+    for f in freq.iter() {
+        ans *= 2;
+        if f + f >= report.len() {
+            ans += 1;
         }
     }
+
+    ans
 }
 
-fn solve(cmds: &[Command]) -> Position {
-    cmds.iter()
-        .fold(Position::new(), |pos, cmd| pos.update(*cmd))
+fn _part2(report: &Vec<String>, idx: usize, win: u8) -> i64 {
+    if report.len() == 1 {
+        return i64::from_str_radix(&report[0], 2).unwrap();
+    }
+
+    let num_bits = report[0].len();
+    assert!(report.iter().all(|x| x.len() == num_bits));
+
+    let f: usize = report
+        .iter()
+        .map(|s| {
+            if s.bytes().nth(idx) == Some(b'1') {
+                1
+            } else {
+                0
+            }
+        })
+        .sum();
+    let goal = if f + f >= report.len() { win } else { win ^ 1 };
+
+    let sub_reports = &report
+        .into_iter()
+        .filter(|s| s.bytes().nth(idx) == Some(goal))
+        .cloned()
+        .collect();
+
+    _part2(&sub_reports, idx + 1, win)
+}
+
+fn part2(report: &Vec<String>, win: u8) -> i64 {
+    _part2(report, 0, win)
 }
 
 fn main() -> std::io::Result<()> {
@@ -83,13 +62,22 @@ fn main() -> std::io::Result<()> {
     let stdin = stdin.lock();
     let reader = BufReader::new(stdin);
 
-    let commands: Vec<Command> = reader
+    let report: Vec<String> = reader
         .lines()
         .map(|x| x.unwrap().parse().unwrap())
         .collect();
 
-    let state = solve(&commands);
-    println!("{} {}", state.part1(), state.part2());
+    let gamma = part1(&report);
+    // hack: epsilon is the same as gamma with the bits flipped.
+    let num_bits = report[0].len();
+    let epsilon = ((1 << num_bits) - 1) ^ gamma;
+
+    println!("{} {} {}", gamma, epsilon, gamma * epsilon);
+
+    let oxygen = part2(&report, b'1');
+    let co2 = part2(&report, b'0');
+
+    println!("{} {} {}", oxygen, co2, oxygen * co2);
 
     Ok(())
 }
