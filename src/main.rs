@@ -1,83 +1,92 @@
+use std::collections::HashMap;
 use std::io::{BufRead, BufReader};
 
-fn part1(report: &Vec<String>) -> i64 {
-    let num_bits = report[0].len();
-    assert!(report.iter().all(|x| x.len() == num_bits));
+type Bingo = Vec<Vec<u8>>;
 
-    let mut freq = vec![0; num_bits];
-    for diag in report.iter() {
-        for i in 0..num_bits {
-            if diag.bytes().nth(i) == Some(b'1') {
-                freq[i] += 1;
-            }
-        }
-    }
-
-    let mut ans = 0;
-    for f in freq.iter() {
-        ans *= 2;
-        if f + f >= report.len() {
-            ans += 1;
-        }
-    }
-
-    ans
+fn solve_row(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
+    *board
+        .iter()
+        .map(|row| row.iter().map(|x| lookup.get(x).unwrap()).max().unwrap())
+        .min()
+        .unwrap()
 }
 
-fn _part2(report: &Vec<String>, idx: usize, win: u8) -> i64 {
-    if report.len() == 1 {
-        return i64::from_str_radix(&report[0], 2).unwrap();
-    }
+fn transpose(board: &Bingo) -> Bingo {
+    let n = board.len();
+    (0..n)
+        .map(|idx| board.iter().map(|board| board[idx]).collect())
+        .collect()
+}
 
-    let num_bits = report[0].len();
-    assert!(report.iter().all(|x| x.len() == num_bits));
+fn get_time(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
+    // do the rows
+    let row_time = solve_row(lookup, board);
+    let flip_board = transpose(board);
+    let col_time = solve_row(lookup, &flip_board);
 
-    let f: usize = report
+    std::cmp::min(row_time, col_time)
+}
+
+fn solve(
+    nums: &[u8],
+    boards: &Vec<Bingo>,
+    cmp: fn((u8, Bingo), (u8, Bingo)) -> (u8, Bingo),
+) -> u16 {
+    let lookup: HashMap<u8, u8> = nums
         .iter()
-        .map(|s| {
-            if s.bytes().nth(idx) == Some(b'1') {
-                1
-            } else {
-                0
-            }
-        })
-        .sum();
-    let goal = if f + f >= report.len() { win } else { win ^ 1 };
-
-    let sub_reports = &report
-        .into_iter()
-        .filter(|s| s.bytes().nth(idx) == Some(goal))
-        .cloned()
+        .enumerate()
+        .map(|(i, &x)| (x, i as u8))
         .collect();
 
-    _part2(&sub_reports, idx + 1, win)
-}
+    let (time, best_board) = boards
+        .iter()
+        .map(|board| (get_time(&lookup, board), board.clone()))
+        .reduce(cmp)
+        .unwrap();
 
-fn part2(report: &Vec<String>, win: u8) -> i64 {
-    _part2(report, 0, win)
+    let total: u16 = best_board
+        .iter()
+        .flatten()
+        .filter(|cell| *lookup.get(cell).unwrap() > time)
+        .map(|&cell| cell as u16)
+        .sum();
+
+    total * (nums[time as usize] as u16)
 }
 
 fn main() -> std::io::Result<()> {
     let stdin = std::io::stdin();
     let stdin = stdin.lock();
-    let reader = BufReader::new(stdin);
+    let mut reader = BufReader::new(stdin);
 
-    let report: Vec<String> = reader
-        .lines()
-        .map(|x| x.unwrap().parse().unwrap())
+    let mut nums = String::new();
+    reader.read_line(&mut nums)?;
+
+    let nums: Vec<u8> = nums.trim().split(',').map(|x| x.parse().unwrap()).collect();
+
+    let boards: Vec<String> = reader.lines().map(|x| x.unwrap()).collect();
+
+    let bingos: Vec<Bingo> = boards
+        .chunks_exact(6)
+        .map(|board| {
+            board
+                .into_iter()
+                .skip(1)
+                .map(|row| {
+                    row.trim()
+                        .split_whitespace()
+                        .map(|x| x.parse().unwrap())
+                        .collect()
+                })
+                .collect()
+        })
         .collect();
 
-    let gamma = part1(&report);
-    // hack: epsilon is the same as gamma with the bits flipped.
-    let num_bits = report[0].len();
-    let epsilon = ((1 << num_bits) - 1) ^ gamma;
+    let (part1, part2) = (
+        solve(&nums, &bingos, std::cmp::min::<(u8, Bingo)>),
+        solve(&nums, &bingos, std::cmp::max::<(u8, Bingo)>),
+    );
 
-    println!("{} {} {}", gamma, epsilon, gamma * epsilon);
-
-    let oxygen = part2(&report, b'1');
-    let co2 = part2(&report, b'0');
-
-    println!("{} {} {}", oxygen, co2, oxygen * co2);
-
+    println!("{} {}", part1, part2);
     Ok(())
 }
