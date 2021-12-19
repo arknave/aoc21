@@ -1,5 +1,6 @@
+use crate::day::Day;
 use std::collections::HashMap;
-use std::io::{BufRead, BufReader};
+use std::io::{self, BufRead};
 
 type Bingo = Vec<Vec<u8>>;
 
@@ -54,39 +55,47 @@ fn solve(
     total * (nums[time as usize] as u16)
 }
 
-fn main() -> std::io::Result<()> {
-    let stdin = std::io::stdin();
-    let stdin = stdin.lock();
-    let mut reader = BufReader::new(stdin);
+pub struct Day04 {
+    nums: Vec<u8>,
+    bingos: Vec<Bingo>,
+}
 
-    let mut nums = String::new();
-    reader.read_line(&mut nums)?;
+impl Day for Day04 {
+    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
+        let mut nums = String::new();
+        reader.read_line(&mut nums)?;
 
-    let nums: Vec<u8> = nums.trim().split(',').map(|x| x.parse().unwrap()).collect();
+        let nums: Vec<u8> = nums.trim().split(',').map(|x| x.parse().unwrap()).collect();
 
-    let boards: Vec<String> = reader.lines().map(|x| x.unwrap()).collect();
+        let boards: Vec<String> = reader.lines().map(|x| x.unwrap()).collect();
 
-    let bingos: Vec<Bingo> = boards
-        .chunks_exact(6)
-        .map(|board| {
-            board
-                .into_iter()
-                .skip(1)
-                .map(|row| {
-                    row.trim()
-                        .split_whitespace()
-                        .map(|x| x.parse().unwrap())
-                        .collect()
-                })
-                .collect()
+        let bingos: Vec<Bingo> = boards
+            .chunks_exact(6)
+            .map(|board| {
+                board
+                    .into_iter()
+                    .skip(1)
+                    .map(|row| {
+                        row.trim()
+                            .split_whitespace()
+                            .map(|x| x.parse().unwrap())
+                            .collect()
+                    })
+                    .collect()
+            })
+            .collect();
+
+        Ok(Self {
+            nums: nums,
+            bingos: bingos,
         })
-        .collect();
+    }
 
-    let (part1, part2) = (
-        solve(&nums, &bingos, std::cmp::min::<(u8, Bingo)>),
-        solve(&nums, &bingos, std::cmp::max::<(u8, Bingo)>),
-    );
+    fn part1(&self) -> String {
+        solve(&self.nums, &self.bingos, std::cmp::min::<(u8, Bingo)>).to_string()
+    }
 
-    println!("{} {}", part1, part2);
-    Ok(())
+    fn part2(&self) -> String {
+        solve(&self.nums, &self.bingos, std::cmp::max::<(u8, Bingo)>).to_string()
+    }
 }

@@ -1,4 +1,5 @@
-use std::io::{BufRead, BufReader};
+use crate::day::Day;
+use std::io::{self, BufRead};
 
 fn solve<T>(iter: &[T], offset: usize) -> u32
 where
@@ -9,19 +10,25 @@ where
         .sum()
 }
 
-fn main() -> std::io::Result<()> {
-    let stdin = std::io::stdin();
-    let stdin = stdin.lock();
-    let reader = BufReader::new(stdin);
+pub struct Day01 {
+    nums: Vec<i64>,
+}
 
-    let nums: Vec<i32> = reader
-        .lines()
-        .map(|x| x.unwrap().parse().unwrap())
-        .collect();
+impl Day for Day01 {
+    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
+        let nums = reader
+            .lines()
+            .map(|x| x.unwrap().parse().unwrap())
+            .collect();
 
-    let ans1 = solve(&nums, 1);
-    let ans2 = solve(&nums, 3);
-    println!("{} {}", ans1, ans2);
+        Ok(Self { nums: nums })
+    }
 
-    Ok(())
+    fn part1(&self) -> String {
+        solve(&self.nums, 1).to_string()
+    }
+
+    fn part2(&self) -> String {
+        solve(&self.nums, 3).to_string()
+    }
 }

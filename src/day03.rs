@@ -1,4 +1,5 @@
-use std::io::{BufRead, BufReader};
+use crate::day::Day;
+use std::io::{self, BufRead};
 
 fn part1(report: &Vec<String>) -> i64 {
     let num_bits = report[0].len();
@@ -57,27 +58,33 @@ fn part2(report: &Vec<String>, win: u8) -> i64 {
     _part2(report, 0, win)
 }
 
-fn main() -> std::io::Result<()> {
-    let stdin = std::io::stdin();
-    let stdin = stdin.lock();
-    let reader = BufReader::new(stdin);
+pub struct Day03 {
+    report: Vec<String>,
+}
 
-    let report: Vec<String> = reader
-        .lines()
-        .map(|x| x.unwrap().parse().unwrap())
-        .collect();
+impl Day for Day03 {
+    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
+        Ok(Self {
+            report: reader
+                .lines()
+                .map(|x| x.unwrap().parse().unwrap())
+                .collect(),
+        })
+    }
 
-    let gamma = part1(&report);
-    // hack: epsilon is the same as gamma with the bits flipped.
-    let num_bits = report[0].len();
-    let epsilon = ((1 << num_bits) - 1) ^ gamma;
+    fn part1(&self) -> String {
+        let gamma = part1(&self.report);
+        // hack: epsilon is the same as gamma with the bits flipped.
+        let num_bits = self.report[0].len();
+        let epsilon = ((1 << num_bits) - 1) ^ gamma;
 
-    println!("{} {} {}", gamma, epsilon, gamma * epsilon);
+        (gamma * epsilon).to_string()
+    }
 
-    let oxygen = part2(&report, b'1');
-    let co2 = part2(&report, b'0');
+    fn part2(&self) -> String {
+        let oxygen = part2(&self.report, b'1');
+        let co2 = part2(&self.report, b'0');
 
-    println!("{} {} {}", oxygen, co2, oxygen * co2);
-
-    Ok(())
+        (oxygen * co2).to_string()
+    }
 }

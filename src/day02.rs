@@ -1,4 +1,5 @@
-use std::io::{BufRead, BufReader};
+use crate::day::Day;
+use std::io::{self, BufRead};
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
@@ -78,18 +79,27 @@ fn solve(cmds: &[Command]) -> Position {
         .fold(Position::new(), |pos, cmd| pos.update(*cmd))
 }
 
-fn main() -> std::io::Result<()> {
-    let stdin = std::io::stdin();
-    let stdin = stdin.lock();
-    let reader = BufReader::new(stdin);
+pub struct Day02 {
+    end: Position,
+}
 
-    let commands: Vec<Command> = reader
-        .lines()
-        .map(|x| x.unwrap().parse().unwrap())
-        .collect();
+impl Day for Day02 {
+    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
+        let commands: Vec<Command> = reader
+            .lines()
+            .map(|x| x.unwrap().parse().unwrap())
+            .collect();
 
-    let state = solve(&commands);
-    println!("{} {}", state.part1(), state.part2());
+        let end = solve(&commands);
 
-    Ok(())
+        Ok(Self { end: end })
+    }
+
+    fn part1(&self) -> String {
+        self.end.part1().to_string()
+    }
+
+    fn part2(&self) -> String {
+        self.end.part2().to_string()
+    }
 }
