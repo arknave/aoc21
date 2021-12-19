@@ -1,92 +1,108 @@
 use std::collections::HashMap;
 use std::io::{BufRead, BufReader};
+use std::str::FromStr;
 
-type Bingo = Vec<Vec<u8>>;
-
-fn solve_row(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
-    *board
-        .iter()
-        .map(|row| row.iter().map(|x| lookup.get(x).unwrap()).max().unwrap())
-        .min()
-        .unwrap()
+fn signum(x: i64) -> i64 {
+    if x > 0 {
+        1
+    } else if x == 0 {
+        0
+    } else {
+        -1
+    }
 }
 
-fn transpose(board: &Bingo) -> Bingo {
-    let n = board.len();
-    (0..n)
-        .map(|idx| board.iter().map(|board| board[idx]).collect())
-        .collect()
+#[derive(Debug, Clone)]
+struct ParseInputError(String);
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+struct Point {
+    x: i64,
+    y: i64,
 }
 
-fn get_time(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
-    // do the rows
-    let row_time = solve_row(lookup, board);
-    let flip_board = transpose(board);
-    let col_time = solve_row(lookup, &flip_board);
+impl FromStr for Point {
+    type Err = ParseInputError;
 
-    std::cmp::min(row_time, col_time)
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let xy: Vec<&str> = s.split(',').collect();
+
+        assert!(xy.len() == 2);
+        let x = xy[0].parse().map_err(|_e| ParseInputError(s.to_string()))?;
+        let y = xy[1].parse().map_err(|_e| ParseInputError(s.to_string()))?;
+
+        Ok(Point { x: x, y: y })
+    }
 }
 
-fn solve(
-    nums: &[u8],
-    boards: &Vec<Bingo>,
-    cmp: fn((u8, Bingo), (u8, Bingo)) -> (u8, Bingo),
-) -> u16 {
-    let lookup: HashMap<u8, u8> = nums
-        .iter()
-        .enumerate()
-        .map(|(i, &x)| (x, i as u8))
-        .collect();
+#[derive(Debug, PartialEq, Clone)]
+struct Line {
+    p0: Point,
+    p1: Point,
+}
 
-    let (time, best_board) = boards
-        .iter()
-        .map(|board| (get_time(&lookup, board), board.clone()))
-        .reduce(cmp)
-        .unwrap();
+impl FromStr for Line {
+    type Err = ParseInputError;
 
-    let total: u16 = best_board
-        .iter()
-        .flatten()
-        .filter(|cell| *lookup.get(cell).unwrap() > time)
-        .map(|&cell| cell as u16)
-        .sum();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let ps: Vec<Point> = s.split(" -> ").map(|p| p.parse().unwrap()).collect();
 
-    total * (nums[time as usize] as u16)
+        assert!(ps.len() == 2);
+        let p0 = ps[0];
+        let p1 = ps[1];
+
+        Ok(Line { p0: p0, p1: p1 })
+    }
+}
+
+impl Line {
+    fn get_points(&self) -> Vec<Point> {
+        let dx = signum(self.p1.x - self.p0.x);
+        let dy = signum(self.p1.y - self.p0.y);
+
+        let mut res = vec![self.p0];
+        let mut p = self.p0;
+        while p != self.p1 {
+            p.x += dx;
+            p.y += dy;
+            res.push(p);
+        }
+
+        res
+    }
+}
+
+fn solve(lines: &[Line]) -> i64 {
+    let mut freq = HashMap::new();
+    for line in lines.iter() {
+        for pt in line.get_points() {
+            freq.insert(pt, freq.get(&pt).unwrap_or(&0) + 1);
+        }
+    }
+
+    freq.values().filter(|&&v| v > 1).count() as i64
 }
 
 fn main() -> std::io::Result<()> {
     let stdin = std::io::stdin();
     let stdin = stdin.lock();
-    let mut reader = BufReader::new(stdin);
+    let reader = BufReader::new(stdin);
 
-    let mut nums = String::new();
-    reader.read_line(&mut nums)?;
-
-    let nums: Vec<u8> = nums.trim().split(',').map(|x| x.parse().unwrap()).collect();
-
-    let boards: Vec<String> = reader.lines().map(|x| x.unwrap()).collect();
-
-    let bingos: Vec<Bingo> = boards
-        .chunks_exact(6)
-        .map(|board| {
-            board
-                .into_iter()
-                .skip(1)
-                .map(|row| {
-                    row.trim()
-                        .split_whitespace()
-                        .map(|x| x.parse().unwrap())
-                        .collect()
-                })
-                .collect()
-        })
+    let lines: Vec<Line> = reader
+        .lines()
+        .map(|x| x.unwrap().parse().unwrap())
         .collect();
 
-    let (part1, part2) = (
-        solve(&nums, &bingos, std::cmp::min::<(u8, Bingo)>),
-        solve(&nums, &bingos, std::cmp::max::<(u8, Bingo)>),
-    );
+    let hv_lines: Vec<Line> = lines
+        .iter()
+        .filter(|l| l.p0.x == l.p1.x || l.p0.y == l.p1.y)
+        .cloned()
+        .collect();
+
+    let part1 = solve(&hv_lines);
+    let part2 = solve(&lines);
 
     println!("{} {}", part1, part2);
+
     Ok(())
 }
