@@ -1,9 +1,19 @@
 use crate::day::Day;
+use std::error::Error;
+use std::fmt;
 use std::io::{self, BufRead};
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
 struct ParseCommandError(String);
+
+impl fmt::Display for ParseCommandError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl Error for ParseCommandError {}
 
 #[derive(Debug, Clone, Copy)]
 enum Command {
@@ -84,11 +94,11 @@ pub struct Day02 {
 }
 
 impl Day for Day02 {
-    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
+    fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
         let commands: Vec<Command> = reader
             .lines()
-            .map(|x| x.unwrap().parse().unwrap())
-            .collect();
+            .map(|line_res| line_res.map(|line| line.parse()))
+            .collect::<io::Result<Result<Vec<Command>, _>>>()??;
 
         let end = solve(&commands);
 

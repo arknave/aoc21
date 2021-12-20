@@ -1,5 +1,6 @@
 use crate::day::Day;
 use std::collections::HashMap;
+use std::error::Error;
 use std::io::{self, BufRead};
 
 type Bingo = Vec<Vec<u8>>;
@@ -61,13 +62,12 @@ pub struct Day04 {
 }
 
 impl Day for Day04 {
-    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
+    fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
         let mut nums = String::new();
         reader.read_line(&mut nums)?;
 
-        let nums: Vec<u8> = nums.trim().split(',').map(|x| x.parse().unwrap()).collect();
-
-        let boards: Vec<String> = reader.lines().map(|x| x.unwrap()).collect();
+        let nums = nums.trim().split(',').map(|x| x.parse()).collect::<Result<Vec<u8>, _>>()?;
+        let boards: Vec<String> = reader.lines().collect::<io::Result<Vec<String>>>()?;
 
         let bingos: Vec<Bingo> = boards
             .chunks_exact(6)

@@ -1,4 +1,5 @@
 use crate::day::Day;
+use std::error::Error;
 use std::io::{self, BufRead};
 
 fn solve<T>(iter: &[T], offset: usize) -> u32
@@ -15,11 +16,11 @@ pub struct Day01 {
 }
 
 impl Day for Day01 {
-    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
-        let nums = reader
+    fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
+        let nums: Vec<i64> = reader
             .lines()
-            .map(|x| x.unwrap().parse().unwrap())
-            .collect();
+            .map(|line_res| line_res.map(|line| line.parse()))
+            .collect::<io::Result<Result<Vec<i64>, _>>>()??;
 
         Ok(Self { nums: nums })
     }

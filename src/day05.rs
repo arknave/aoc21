@@ -1,9 +1,13 @@
 use crate::day::Day;
 use std::collections::HashMap;
+use std::error::Error;
+use std::fmt;
 use std::io::{self, BufRead};
 use std::str::FromStr;
 
 fn signum(x: i64) -> i64 {
+    // TODO: Try and replace with match somehow?
+    // Or if we use deps, use the num crate version
     if x > 0 {
         1
     } else if x == 0 {
@@ -15,6 +19,14 @@ fn signum(x: i64) -> i64 {
 
 #[derive(Debug, Clone)]
 struct ParseInputError(String);
+
+impl fmt::Display for ParseInputError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl Error for ParseInputError {}
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 struct Point {
@@ -46,7 +58,7 @@ impl FromStr for Line {
     type Err = ParseInputError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let ps: Vec<Point> = s.split(" -> ").map(|p| p.parse().unwrap()).collect();
+        let ps = s.split(" -> ").map(|p| p.parse()).collect::<Result<Vec<Point>, _>>()?;
 
         assert!(ps.len() == 2);
         let p0 = ps[0];
@@ -89,12 +101,13 @@ pub struct Day05 {
 }
 
 impl Day for Day05 {
-    fn new<R: BufRead>(reader: &mut R) -> io::Result<Self> {
-        Ok(Self {
-            lines: reader
+    fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
+        let lines = reader
                 .lines()
-                .map(|x| x.unwrap().parse().unwrap())
-                .collect(),
+                .map(|line_res| line_res.map(|line| line.parse()))
+                .collect::<io::Result<Result<Vec<_>, _>>>()??;
+        Ok(Self {
+            lines: lines,
         })
     }
 

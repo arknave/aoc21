@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::io::BufReader;
 
 mod day;
@@ -14,12 +15,12 @@ use crate::day03::*;
 use crate::day04::*;
 use crate::day05::*;
 
-fn main() -> std::io::Result<()> {
+fn main() -> Result<(), Box<dyn Error>> {
     let stdin = std::io::stdin();
     let stdin = stdin.lock();
     let mut reader = BufReader::new(stdin);
 
-    let day = Day05::new(&mut reader)?;
+    let day = Day01::new(&mut reader)?;
     let p1 = day.part1();
     let p2 = day.part2();
 
