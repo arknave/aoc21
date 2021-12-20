@@ -58,7 +58,10 @@ impl FromStr for Line {
     type Err = ParseInputError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let ps = s.split(" -> ").map(|p| p.parse()).collect::<Result<Vec<Point>, _>>()?;
+        let ps = s
+            .split(" -> ")
+            .map(|p| p.parse())
+            .collect::<Result<Vec<Point>, _>>()?;
 
         assert!(ps.len() == 2);
         let p0 = ps[0];
@@ -103,12 +106,10 @@ pub struct Day05 {
 impl Day for Day05 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
         let lines = reader
-                .lines()
-                .map(|line_res| line_res.map(|line| line.parse()))
-                .collect::<io::Result<Result<Vec<_>, _>>>()??;
-        Ok(Self {
-            lines: lines,
-        })
+            .lines()
+            .map(|line_res| line_res.map(|line| line.parse()))
+            .collect::<io::Result<Result<Vec<_>, _>>>()??;
+        Ok(Self { lines: lines })
     }
 
     fn part1(&self) -> String {

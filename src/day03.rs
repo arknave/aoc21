@@ -45,7 +45,11 @@ fn _part2(report: &[String], idx: usize, win: u8) -> i64 {
         })
         .sum();
 
-    let goal = if column_sum + column_sum >= report.len() { win } else { win ^ 1 };
+    let goal = if column_sum + column_sum >= report.len() {
+        win
+    } else {
+        win ^ 1
+    };
     let sub_reports: Vec<String> = report
         .into_iter()
         .filter(|s| s.bytes().nth(idx) == Some(goal))
@@ -65,13 +69,9 @@ pub struct Day03 {
 
 impl Day for Day03 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
-        let report: Vec<String> = reader
-                .lines()
-                .collect::<io::Result<Vec<_>>>()?;
+        let report: Vec<String> = reader.lines().collect::<io::Result<Vec<_>>>()?;
 
-        Ok(Self {
-            report: report,
-        })
+        Ok(Self { report: report })
     }
 
     fn part1(&self) -> String {

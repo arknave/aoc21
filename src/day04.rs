@@ -66,7 +66,11 @@ impl Day for Day04 {
         let mut nums = String::new();
         reader.read_line(&mut nums)?;
 
-        let nums = nums.trim().split(',').map(|x| x.parse()).collect::<Result<Vec<u8>, _>>()?;
+        let nums = nums
+            .trim()
+            .split(',')
+            .map(|x| x.parse())
+            .collect::<Result<Vec<u8>, _>>()?;
         let boards: Vec<String> = reader.lines().collect::<io::Result<Vec<String>>>()?;
 
         let bingos: Vec<Bingo> = boards
