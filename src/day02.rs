@@ -86,7 +86,7 @@ impl Position {
 
 fn solve(cmds: &[Command]) -> Position {
     cmds.iter()
-        .fold(Position::new(), |pos, cmd| pos.update(*cmd))
+        .fold(Position::new(), |pos, &cmd| pos.update(cmd))
 }
 
 pub struct Day02 {

@@ -2,13 +2,13 @@ use crate::day::Day;
 use std::error::Error;
 use std::io::{self, BufRead};
 
-fn solve<T>(iter: &[T], offset: usize) -> u32
+fn solve<T>(iter: &[T], offset: usize) -> usize
 where
     T: std::cmp::PartialOrd,
 {
     iter.windows(offset + 1)
-        .map(|window| (window[0] < window[offset]) as u32)
-        .sum()
+        .filter(|window| (window[0] < window[offset]))
+        .count()
 }
 
 pub struct Day01 {
