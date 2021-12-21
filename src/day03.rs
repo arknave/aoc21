@@ -90,3 +90,19 @@ impl Day for Day03 {
         (oxygen * co2).to_string()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_data() {
+        use crate::*;
+        use std::io::BufReader;
+
+        let data = include_bytes!("../data_files/day03.txt");
+        let mut reader = BufReader::new(&data[..]);
+
+        let day = Day03::new(&mut reader).unwrap();
+        assert_eq!(day.part1(), "738234");
+        assert_eq!(day.part2(), "3969126");
+    }
+}

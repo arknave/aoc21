@@ -103,3 +103,19 @@ impl Day for Day04 {
         solve(&self.nums, &self.bingos, std::cmp::max::<(u8, Bingo)>).to_string()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_data() {
+        use crate::*;
+        use std::io::BufReader;
+
+        let data = include_bytes!("../data_files/day04.txt");
+        let mut reader = BufReader::new(&data[..]);
+
+        let day = Day04::new(&mut reader).unwrap();
+        assert_eq!(day.part1(), "38913");
+        assert_eq!(day.part2(), "16836");
+    }
+}

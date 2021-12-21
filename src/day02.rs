@@ -113,3 +113,19 @@ impl Day for Day02 {
         self.end.part2().to_string()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_data() {
+        use crate::*;
+        use std::io::BufReader;
+
+        let data = include_bytes!("../data_files/day02.txt");
+        let mut reader = BufReader::new(&data[..]);
+
+        let day = Day02::new(&mut reader).unwrap();
+        assert_eq!(day.part1(), "2187380");
+        assert_eq!(day.part2(), "2086357770");
+    }
+}
