@@ -15,6 +15,7 @@ mod day09;
 mod day10;
 mod day11;
 mod day12;
+mod util;
 
 use crate::day::*;
 use crate::day01::*;

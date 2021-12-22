@@ -16,10 +16,12 @@ fn solve(positions: &[i64], dist: fn(i64) -> i64) -> u64 {
         .iter()
         .min()
         .expect("Must have at least one position");
+
     let &hi = positions
         .iter()
         .max()
         .expect("Must have at least one position");
+
     (lo..=hi)
         .map(|center| {
             // TODO: Replace with abs_diff when not experimental
