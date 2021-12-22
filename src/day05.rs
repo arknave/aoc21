@@ -28,10 +28,10 @@ impl FromStr for Line {
     type Err = ParseInputError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let ps = s
+        let ps: Vec<Point> = s
             .split(" -> ")
             .map(|p| p.parse())
-            .collect::<Result<Vec<Point>, _>>()?;
+            .collect::<Result<_, _>>()?;
 
         assert!(ps.len() == 2);
         let p0 = ps[0];

@@ -1,10 +1,9 @@
-
 use std::error::Error;
 use std::fmt;
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
-pub struct ParseInputError(String);
+pub struct ParseInputError(pub String);
 
 impl fmt::Display for ParseInputError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -18,6 +17,12 @@ impl Error for ParseInputError {}
 pub struct Point {
     pub x: i64,
     pub y: i64,
+}
+
+impl Point {
+    pub fn new(x: i64, y: i64) -> Self {
+        Self { x: x, y: y }
+    }
 }
 
 impl FromStr for Point {
