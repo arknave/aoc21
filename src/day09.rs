@@ -53,19 +53,19 @@ fn low_points(grid: &Grid) -> Vec<u8> {
     let m = grid[0].len();
     assert!(grid.iter().all(|row| row.len() == m));
 
-    let neighbors = |x, y| {
+    let neighbors = |r, c| {
         let mut neighbors = vec![];
-        if x > 0 {
-            neighbors.push((x - 1, y));
+        if r > 0 {
+            neighbors.push((r - 1, c));
         }
-        if y > 0 {
-            neighbors.push((x, y - 1));
+        if c > 0 {
+            neighbors.push((r, c - 1));
         }
-        if x + 1 < n {
-            neighbors.push((x + 1, y));
+        if r + 1 < n {
+            neighbors.push((r + 1, c));
         }
-        if y + 1 < m {
-            neighbors.push((x, y + 1));
+        if c + 1 < m {
+            neighbors.push((r, c + 1));
         }
 
         neighbors
@@ -125,12 +125,12 @@ pub struct Day09 {
 
 impl Day for Day09 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
-        let grid: Vec<Vec<u8>> = reader
+        let grid: Grid = reader
             .lines()
             .map(|line_res| {
                 line_res.map(|line| line.bytes().map(|c| c - b'0').collect::<Vec<u8>>())
             })
-            .collect::<io::Result<Vec<Vec<u8>>>>()?;
+            .collect::<io::Result<_>>()?;
 
         Ok(Self { grid: grid })
     }

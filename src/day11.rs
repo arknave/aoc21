@@ -58,7 +58,7 @@ pub struct Day11 {
 
 impl Day for Day11 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
-        let grid: Vec<Vec<u8>> = reader
+        let grid: Grid = reader
             .lines()
             .map(|line_res| {
                 line_res.map(|line| line.bytes().map(|c| c - b'0').collect::<Vec<u8>>())
