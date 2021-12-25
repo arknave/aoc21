@@ -24,6 +24,10 @@ impl Point {
     pub fn new(x: i64, y: i64) -> Self {
         Self { x: x, y: y }
     }
+
+    pub fn get_adj9(&self) -> impl Iterator<Item = Point> + '_ {
+        (-1..=1).flat_map(move |dx| (-1..=1).map(move |dy| Point::new(self.x + dx, self.y + dy)))
+    }
 }
 
 impl FromStr for Point {
