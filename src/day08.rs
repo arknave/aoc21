@@ -35,8 +35,8 @@ impl FromStr for Pattern {
         if parts.len() != 2 {
             return Err(ParsePatternError(s.to_string()));
         }
-        let clues: Vec<u8> = parts[0].split(' ').map(to_byte).collect();
-        let output: Vec<u8> = parts[1].split(' ').map(to_byte).collect();
+        let clues: Vec<u8> = parts[0].split_whitespace().map(to_byte).collect();
+        let output: Vec<u8> = parts[1].split_whitespace().map(to_byte).collect();
 
         if clues.len() != 10 || output.len() != 4 {
             return Err(ParsePatternError(s.to_string()));

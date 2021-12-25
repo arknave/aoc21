@@ -23,6 +23,7 @@ mod day17;
 mod day18;
 mod day19;
 mod day20;
+mod day21;
 mod util;
 
 use crate::day::*;
@@ -46,6 +47,7 @@ use crate::day17::*;
 use crate::day18::*;
 use crate::day19::*;
 use crate::day20::*;
+use crate::day21::*;
 
 fn run<D: Day>(day: D) -> Result<(String, String), Box<dyn Error>> {
     Ok((day.part1(), day.part2()))
@@ -73,6 +75,7 @@ fn run_day<R: BufRead>(day: u8, reader: &mut R) -> Result<(String, String), Box<
         18 => run(Day18::new(reader)?),
         19 => run(Day19::new(reader)?),
         20 => run(Day20::new(reader)?),
+        21 => run(Day21::new(reader)?),
         _ => panic!("Unsupported day {}", day),
     }
 }
