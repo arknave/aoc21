@@ -4,8 +4,9 @@ use std::error::Error;
 use std::io::{self, BufRead};
 
 type Bingo = Vec<Vec<u8>>;
+type BingoRef<'a> = &'a [Vec<u8>];
 
-fn solve_row(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
+fn solve_row(lookup: &HashMap<u8, u8>, board: BingoRef) -> u8 {
     *board
         .iter()
         .map(|row| row.iter().map(|x| lookup.get(x).unwrap()).max().unwrap())
@@ -13,14 +14,14 @@ fn solve_row(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
         .unwrap()
 }
 
-fn transpose(board: &Bingo) -> Bingo {
+fn transpose(board: BingoRef) -> Bingo {
     let n = board.len();
     (0..n)
         .map(|idx| board.iter().map(|board| board[idx]).collect())
         .collect()
 }
 
-fn get_time(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
+fn get_time(lookup: &HashMap<u8, u8>, board: BingoRef) -> u8 {
     // do the rows
     let row_time = solve_row(lookup, board);
     let flip_board = transpose(board);
@@ -29,11 +30,9 @@ fn get_time(lookup: &HashMap<u8, u8>, board: &Bingo) -> u8 {
     std::cmp::min(row_time, col_time)
 }
 
-fn solve(
-    nums: &[u8],
-    boards: &Vec<Bingo>,
-    cmp: fn((u8, Bingo), (u8, Bingo)) -> (u8, Bingo),
-) -> u16 {
+type CmpType<T> = fn(T, T) -> T;
+
+fn solve(nums: &[u8], boards: &[Bingo], cmp: CmpType<(u8, Bingo)>) -> u16 {
     let lookup: HashMap<u8, u8> = nums
         .iter()
         .enumerate()
@@ -77,7 +76,7 @@ impl Day for Day04 {
             .chunks_exact(6)
             .map(|board| {
                 board
-                    .into_iter()
+                    .iter()
                     .skip(1)
                     .map(|row| {
                         row.trim()

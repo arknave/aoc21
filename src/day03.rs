@@ -8,11 +8,11 @@ fn part1(report: &[String]) -> i64 {
 
     let mut freq = vec![0; num_bits];
     for diag in report.iter() {
-        for i in 0..num_bits {
-            if diag.bytes().nth(i) == Some(b'1') {
+        diag.bytes().enumerate().for_each(|(i, b)| {
+            if b == b'1' {
                 freq[i] += 1;
             }
-        }
+        });
     }
 
     let mut ans = 0;
@@ -37,7 +37,7 @@ fn _part2(report: &[String], idx: usize, win: u8) -> i64 {
     let column_sum: usize = report
         .iter()
         .map(|s| {
-            if s.bytes().nth(idx) == Some(b'1') {
+            if s.as_bytes().get(idx) == Some(&b'1') {
                 1
             } else {
                 0
@@ -51,8 +51,8 @@ fn _part2(report: &[String], idx: usize, win: u8) -> i64 {
         win ^ 1
     };
     let sub_reports: Vec<String> = report
-        .into_iter()
-        .filter(|s| s.bytes().nth(idx) == Some(goal))
+        .iter()
+        .filter(|s| s.as_bytes().get(idx) == Some(&goal))
         .cloned()
         .collect();
 

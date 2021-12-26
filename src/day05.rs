@@ -7,14 +7,11 @@ use std::io::{self, BufRead};
 use std::str::FromStr;
 
 fn signum(x: i64) -> i64 {
-    // TODO: Try and replace with match somehow?
-    // Or if we use deps, use the num crate version
-    if x > 0 {
-        1
-    } else if x == 0 {
-        0
-    } else {
-        -1
+    // TODO: use the num crate version
+    match x {
+        x if x > 0 => 1,
+        x if x < 0 => -1,
+        _ => 0,
     }
 }
 
