@@ -69,14 +69,12 @@ impl Pattern {
         let one = self
             .clues
             .iter()
-            .filter(|segs| segs.count_ones() == 2)
-            .next()
+            .find(|segs| segs.count_ones() == 2)
             .expect("Should have a 1");
         let four = self
             .clues
             .iter()
-            .filter(|segs| segs.count_ones() == 4)
-            .next()
+            .find(|segs| segs.count_ones() == 4)
             .expect("Should have a 4");
 
         let lookup = |segs: u8| -> u64 {

@@ -42,10 +42,8 @@ fn parse_chunk(chunk: &str) -> Result<Vec<u8>, u8> {
     for c in chunk.bytes() {
         if is_open(c) {
             stk.push(c);
-        } else {
-            if stk.pop() != Some(match_close(c)) {
-                return Err(c);
-            }
+        } else if stk.pop() != Some(match_close(c)) {
+            return Err(c);
         }
     }
 
@@ -95,7 +93,7 @@ impl Day for Day10 {
 
         assert!(scores.len() % 2 == 1);
 
-        scores.sort();
+        scores.sort_unstable();
         scores[scores.len() / 2].to_string()
     }
 }

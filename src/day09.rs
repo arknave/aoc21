@@ -47,8 +47,9 @@ impl UnionFind {
 
 // TODO: write some grid module if this is useful elsewhere
 type Grid = Vec<Vec<u8>>;
+type GridRef<'a> = &'a [Vec<u8>];
 
-fn low_points(grid: &Grid) -> Vec<u8> {
+fn low_points(grid: GridRef) -> Vec<u8> {
     let n = grid.len();
     let m = grid[0].len();
     assert!(grid.iter().all(|row| row.len() == m));
@@ -88,7 +89,7 @@ fn low_points(grid: &Grid) -> Vec<u8> {
     res
 }
 
-fn components(grid: &Grid) -> Vec<i64> {
+fn components(grid: GridRef) -> Vec<i64> {
     // TODO: This method returns each cell of size 9 as a size-1 CC, which may not be great...
     let n = grid.len();
     let m = grid[0].len();

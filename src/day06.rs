@@ -9,7 +9,7 @@ pub struct Day06 {
 }
 
 fn solve(state: &LFState, days: u32) -> u64 {
-    let mut cur = state.clone();
+    let mut cur = *state;
     for _ in 0..days {
         let zero = cur[0];
         for i in 0..8 {
