@@ -4,8 +4,9 @@ use std::io::{self, BufRead};
 
 // TODO: write some grid module if this is useful elsewhere
 type Grid = Vec<Vec<u8>>;
+type GridRef<'a> = &'a [Vec<u8>];
 
-fn step(grid: &Grid) -> (Grid, u32) {
+fn step(grid: GridRef) -> (Grid, u32) {
     let n = grid.len();
     let m = grid[0].len();
     assert!(grid.iter().all(|row| row.len() == m));
@@ -18,9 +19,9 @@ fn step(grid: &Grid) -> (Grid, u32) {
         .collect();
     let mut stk = vec![];
     let mut flips = vec![];
-    for row_idx in 0..n {
-        for col_idx in 0..n {
-            if res[row_idx][col_idx] == 10 {
+    for (row_idx, row) in res.iter().enumerate() {
+        for (col_idx, &cell) in row.iter().enumerate() {
+            if cell == 10 {
                 stk.push((row_idx, col_idx));
             }
         }

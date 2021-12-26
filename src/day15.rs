@@ -7,8 +7,9 @@ use std::io::{self, BufRead};
 
 // TODO: write some grid module if this is useful elsewhere
 type Grid = Vec<Vec<u8>>;
+type GridRef<'a> = &'a [Vec<u8>];
 
-fn shortest_path(grid: &Grid) -> u64 {
+fn shortest_path(grid: GridRef) -> u64 {
     let n = grid.len();
     let m = grid[0].len();
     assert!(grid.iter().all(|row| row.len() == m));
@@ -40,7 +41,7 @@ fn shortest_path(grid: &Grid) -> u64 {
 
     // TODO: rework this so you dont have to pass in the array every time
     #[inline]
-    fn get_dist(dist: &Vec<Vec<u64>>, pos: &(usize, usize)) -> u64 {
+    fn get_dist(dist: &[Vec<u64>], pos: &(usize, usize)) -> u64 {
         dist[pos.0][pos.1]
     }
 
@@ -62,7 +63,7 @@ fn shortest_path(grid: &Grid) -> u64 {
     get_dist(&dist, &(n - 1, m - 1))
 }
 
-fn expand_grid(grid: &Grid, copies: usize) -> Grid {
+fn expand_grid(grid: GridRef, copies: usize) -> Grid {
     let n = grid.len();
     let m = grid[0].len();
 

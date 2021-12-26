@@ -4,8 +4,8 @@ use std::error::Error;
 use std::io::{self, BufRead};
 use std::iter;
 
-const START: &'static str = "start";
-const END: &'static str = "end";
+const START: &str = "start";
+const END: &str = "end";
 
 struct Solver<'a> {
     freq: HashMap<&'a str, u32>,
@@ -14,14 +14,14 @@ struct Solver<'a> {
 }
 
 fn is_lower(s: &str) -> bool {
-    s.bytes().all(|c| b'a' <= c && c <= b'z')
+    s.bytes().all(|c| (b'a'..=b'z').contains(&c))
 }
 
 impl<'a> Solver<'a> {
     fn new(edges: &'a [(String, String)], can_double: bool) -> Self {
         Self {
             freq: iter::once((START, 1)).collect(),
-            edges: edges,
+            edges,
             has_double: !can_double,
         }
     }
