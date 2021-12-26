@@ -136,7 +136,7 @@ impl Day for Day08 {
     fn part2(&self) -> String {
         self.patterns
             .iter()
-            .map(|pattern| pattern.solve())
+            .map(Pattern::solve)
             .sum::<u64>()
             .to_string()
     }

@@ -1,5 +1,5 @@
 use crate::day::Day;
-use crate::util::*;
+use crate::util::{ParseInputError, Point};
 
 use std::collections::HashMap;
 use std::error::Error;
@@ -25,10 +25,7 @@ impl FromStr for Line {
     type Err = ParseInputError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let ps: Vec<Point> = s
-            .split(" -> ")
-            .map(|p| p.parse())
-            .collect::<Result<_, _>>()?;
+        let ps: Vec<Point> = s.split(" -> ").map(str::parse).collect::<Result<_, _>>()?;
 
         assert!(ps.len() == 2);
         let p0 = ps[0];

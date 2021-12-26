@@ -21,10 +21,10 @@ impl Packet {
         match &self.data {
             Data::Literal(x) => *x,
             Data::Operator(children) => match &self.type_id {
-                0 => children.iter().map(|child| child.evaluate()).sum(),
-                1 => children.iter().map(|child| child.evaluate()).product(),
-                2 => children.iter().map(|child| child.evaluate()).min().unwrap(),
-                3 => children.iter().map(|child| child.evaluate()).max().unwrap(),
+                0 => children.iter().map(Packet::evaluate).sum(),
+                1 => children.iter().map(Packet::evaluate).product(),
+                2 => children.iter().map(Packet::evaluate).min().unwrap(),
+                3 => children.iter().map(Packet::evaluate).max().unwrap(),
                 5 => {
                     if children[0].evaluate() > children[1].evaluate() {
                         1
@@ -64,12 +64,12 @@ fn add_bit_i64(v: i64, b: &u8) -> i64 {
 fn parse_literal(i: &[u8], acc: i64) -> (&[u8], i64) {
     let chunk = &i[0..5];
     let rem = &i[5..];
-    let res = chunk[1..].iter().fold(acc, add_bit_i64);
+    let val = chunk[1..].iter().fold(acc, add_bit_i64);
 
     if chunk[0] > 0 {
-        parse_literal(rem, res)
+        parse_literal(rem, val)
     } else {
-        (rem, res)
+        (rem, val)
     }
 }
 
@@ -157,7 +157,7 @@ fn parse_data(s: &str) -> Packet {
 }
 
 fn version_sum(packet: &Packet) -> i64 {
-    (packet.version as i64)
+    i64::from(packet.version)
         + match &packet.data {
             Data::Literal(_) => 0,
             Data::Operator(children) => children.iter().map(|child| version_sum(child)).sum(),

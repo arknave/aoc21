@@ -47,8 +47,8 @@ impl Day25 {
         let n = self.n;
         let m = self.m;
 
-        let mut easts: HashSet<(usize, usize)> = self.easts.iter().cloned().collect();
-        let mut souths: HashSet<(usize, usize)> = self.souths.iter().cloned().collect();
+        let mut easts: HashSet<(usize, usize)> = self.easts.iter().copied().collect();
+        let mut souths: HashSet<(usize, usize)> = self.souths.iter().copied().collect();
 
         let mut steps = 0;
         loop {

@@ -49,10 +49,10 @@ fn solve(nums: &[u8], boards: &[Bingo], cmp: CmpType<(u8, Bingo)>) -> u16 {
         .iter()
         .flatten()
         .filter(|cell| *lookup.get(cell).unwrap() > time)
-        .map(|&cell| cell as u16)
+        .map(|&cell| u16::from(cell))
         .sum();
 
-    total * (nums[time as usize] as u16)
+    total * u16::from(nums[time as usize])
 }
 
 pub struct Day04 {
@@ -68,7 +68,7 @@ impl Day for Day04 {
         let nums = nums
             .trim()
             .split(',')
-            .map(|x| x.parse())
+            .map(str::parse)
             .collect::<Result<Vec<u8>, _>>()?;
         let boards: Vec<String> = reader.lines().collect::<io::Result<Vec<String>>>()?;
 

@@ -109,10 +109,10 @@ impl Day for Day12 {
             .map(|line_res| {
                 line_res.and_then(|line| {
                     let parts: Vec<&str> = line.split('-').collect();
-                    if parts.len() != 2 {
-                        Err(io::Error::from(io::ErrorKind::InvalidInput))
-                    } else {
+                    if parts.len() == 2 {
                         Ok((parts[0].to_string(), parts[1].to_string()))
+                    } else {
+                        Err(io::Error::from(io::ErrorKind::InvalidInput))
                     }
                 })
             })

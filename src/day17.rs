@@ -60,9 +60,10 @@ impl Day17 {
                 (self.y_bounds.0..=-self.y_bounds.0).filter_map(move |y_vel| {
                     let (hit_goal, max_height) = self.run_with_vel(Point::new(x_vel, y_vel));
 
-                    match hit_goal {
-                        true => Some(max_height),
-                        false => None,
+                    if hit_goal {
+                        Some(max_height)
+                    } else {
+                        None
                     }
                 })
             })
@@ -72,16 +73,16 @@ impl Day17 {
 
 impl Day for Day17 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
-        let mut bounds_desc = String::new();
-        reader.read_line(&mut bounds_desc)?;
-
-        let bounds_desc: Vec<&str> = bounds_desc.trim().split(' ').collect();
-
         fn parse_range(s: &str) -> (i64, i64) {
             let coords: Vec<i64> = s[2..].split("..").map(|v| v.parse().unwrap()).collect();
 
             (coords[0], coords[1])
         }
+
+        let mut bounds_desc = String::new();
+        reader.read_line(&mut bounds_desc)?;
+
+        let bounds_desc: Vec<&str> = bounds_desc.trim().split(' ').collect();
 
         let x_bounds = parse_range(bounds_desc[2].trim_end_matches(','));
         let y_bounds = parse_range(bounds_desc[3]);

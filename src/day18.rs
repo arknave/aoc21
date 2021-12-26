@@ -26,32 +26,29 @@ impl Snailfish {
     }
 
     fn parse_str(s: &[u8]) -> Result<(&[u8], Self), ParseInputError> {
-        match s[0] {
-            b'[' => {
-                let (s, lhs) = Self::parse_str(&s[1..])?;
+        if s[0] == b'[' {
+            let (s, lhs) = Self::parse_str(&s[1..])?;
 
-                if s[0] != b',' {
-                    return Err(ParseInputError(String::from_utf8_lossy(s).into_owned()));
-                }
-
-                let (s, rhs) = Self::parse_str(&s[1..])?;
-                if s[0] != b']' {
-                    return Err(ParseInputError(String::from_utf8_lossy(s).into_owned()));
-                }
-
-                Ok((&s[1..], Snailfish::Pair(Box::new(lhs), Box::new(rhs))))
+            if s[0] != b',' {
+                return Err(ParseInputError(String::from_utf8_lossy(s).into_owned()));
             }
-            _ => {
-                let mut k = 0;
-                while s[k].is_ascii_digit() {
-                    k += 1
-                }
 
-                let val = s[..k]
-                    .iter()
-                    .fold(0, |acc, x| 10 * acc + i64::from(x - b'0'));
-                Ok((&s[k..], Snailfish::Leaf(val)))
+            let (s, rhs) = Self::parse_str(&s[1..])?;
+            if s[0] != b']' {
+                return Err(ParseInputError(String::from_utf8_lossy(s).into_owned()));
             }
+
+            Ok((&s[1..], Snailfish::Pair(Box::new(lhs), Box::new(rhs))))
+        } else {
+            let mut k = 0;
+            while s[k].is_ascii_digit() {
+                k += 1;
+            }
+
+            let val = s[..k]
+                .iter()
+                .fold(0, |acc, x| 10 * acc + i64::from(x - b'0'));
+            Ok((&s[k..], Snailfish::Leaf(val)))
         }
     }
 
@@ -140,13 +137,13 @@ impl Snailfish {
                 }
             }
             Snailfish::Pair(lhs, rhs) => {
-                let (did_split, lhs) = lhs.split();
+                let (lhs_split, lhs) = lhs.split();
 
-                if did_split {
+                if lhs_split {
                     (true, Snailfish::make_pair(lhs, *rhs))
                 } else {
-                    let (did_split, rhs) = rhs.split();
-                    (did_split, Snailfish::make_pair(lhs, rhs))
+                    let (rhs_split, rhs) = rhs.split();
+                    (rhs_split, Snailfish::make_pair(lhs, rhs))
                 }
             }
         }
@@ -163,9 +160,7 @@ impl Snailfish {
 
             let (did_split, split_res) = res.split();
             res = split_res;
-            if did_split {
-                continue;
-            } else {
+            if !did_split {
                 break;
             }
         }

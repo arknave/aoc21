@@ -73,9 +73,9 @@ impl Day for Day13 {
                     let fold_data = line.split(' ').last().unwrap();
                     let fold_data: Vec<_> = fold_data.split('=').collect();
 
-                    let axis = match fold_data[0] {
-                        "x" => Axis::X,
-                        "y" => Axis::Y,
+                    let axis = match fold_data.get(0) {
+                        Some(&"x") => Axis::X,
+                        Some(&"y") => Axis::Y,
                         _ => unreachable!(),
                     };
 
@@ -91,7 +91,7 @@ impl Day for Day13 {
 
     fn part1(&self) -> String {
         let (axis, fold_val) = self.folds[0];
-        let points = do_fold(self.points.iter().cloned(), axis, fold_val);
+        let points = do_fold(self.points.iter().copied(), axis, fold_val);
         let ans = points.len();
 
         ans.to_string()

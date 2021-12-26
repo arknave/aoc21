@@ -31,10 +31,10 @@ impl FromStr for Command {
             .parse()
             .map_err(|_| ParseCommandError(s.to_string()))?;
 
-        match parts[0] {
-            "forward" => Ok(Command::Forward(val)),
-            "down" => Ok(Command::Down(val)),
-            "up" => Ok(Command::Up(val)),
+        match parts.get(0) {
+            Some(&"forward") => Ok(Command::Forward(val)),
+            Some(&"down") => Ok(Command::Down(val)),
+            Some(&"up") => Ok(Command::Up(val)),
             _ => Err(ParseCommandError(s.to_string())),
         }
     }

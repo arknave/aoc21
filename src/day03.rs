@@ -16,7 +16,7 @@ fn part1(report: &[String]) -> i64 {
     }
 
     let mut ans = 0;
-    for f in freq.iter() {
+    for f in &freq {
         ans <<= 1;
         if f + f >= report.len() {
             ans |= 1;

@@ -30,7 +30,7 @@ impl Day for Day06 {
         let nums = nums
             .trim()
             .split(',')
-            .map(|x| x.parse())
+            .map(str::parse)
             .collect::<Result<Vec<u8>, _>>()?;
 
         let mut state: LFState = Default::default();

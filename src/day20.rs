@@ -22,16 +22,17 @@ impl Day20 {
         assert!(self.rules.len() == 512);
 
         // TODO: test over other values of rules[0], rules[511]
-        let start_points: HashSet<Point> = self.start.iter().cloned().collect();
+        let start_points: HashSet<Point> = self.start.iter().copied().collect();
 
         let (background, points) =
             (0..days).fold((false, start_points), |(background, points), _| {
-                let next_background = match background {
-                    false => self.rules[0],
-                    true => self.rules[511],
+                let next_background = if background {
+                    self.rules[511]
+                } else {
+                    self.rules[0]
                 };
 
-                let cands: HashSet<Point> = points.iter().flat_map(|p| p.get_adj9()).collect();
+                let cands: HashSet<Point> = points.iter().flat_map(Point::get_adj9).collect();
 
                 let next_points = cands
                     .into_iter()
@@ -73,12 +74,13 @@ impl Day for Day20 {
             .into_iter()
             .enumerate()
             .flat_map(|(r, row)| {
-                row.into_iter()
-                    .enumerate()
-                    .filter_map(move |(c, cell)| match cell {
-                        true => Some(Point::new(r as i64, c as i64)),
-                        false => None,
-                    })
+                row.into_iter().enumerate().filter_map(move |(c, cell)| {
+                    if cell {
+                        Some(Point::new(r as i64, c as i64))
+                    } else {
+                        None
+                    }
+                })
             })
             .collect();
 

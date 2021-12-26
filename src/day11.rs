@@ -30,8 +30,8 @@ fn step(grid: GridRef) -> (Grid, u32) {
     while !stk.is_empty() {
         let (row_idx, col_idx) = stk.pop().unwrap();
         flips.push((row_idx, col_idx));
-        for dr in -1i64..=1 {
-            for dc in -1i64..=1 {
+        for dr in -1_i64..=1 {
+            for dc in -1_i64..=1 {
                 let new_row = (row_idx as i64) + dr;
                 let new_col = (col_idx as i64) + dc;
                 if in_bounds(new_row, new_col) {
@@ -46,7 +46,7 @@ fn step(grid: GridRef) -> (Grid, u32) {
         }
     }
 
-    for &(row_idx, col_idx) in flips.iter() {
+    for &(row_idx, col_idx) in &flips {
         res[row_idx][col_idx] = 0;
     }
 
@@ -81,7 +81,7 @@ impl Day for Day11 {
     fn part2(&self) -> String {
         let mut cur_step = 0;
         let mut grid = self.grid.clone();
-        let mut last_flash = 0u32;
+        let mut last_flash = 0;
 
         let all_cells = (grid.len() * grid[0].len()).try_into().unwrap();
 

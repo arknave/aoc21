@@ -54,7 +54,7 @@ impl Day14 {
         let pair_freq = (0..days).fold(pair_freq, |pairs, _| self.advance(&pairs));
 
         let mut single_freq = HashMap::new();
-        for ((k, _), f) in pair_freq.into_iter() {
+        for ((k, _), f) in pair_freq {
             add_map(&mut single_freq, k, f);
         }
 
@@ -71,10 +71,10 @@ impl Day for Day14 {
         fn parse_line(s: String) -> Result<((u8, u8), u8), ParseInputError> {
             let bytes = s.as_bytes();
 
-            if bytes.len() != 7 {
-                Err(ParseInputError(s))
-            } else {
+            if bytes.len() == 7 {
                 Ok(((bytes[0], bytes[1]), bytes[6]))
+            } else {
+                Err(ParseInputError(s))
             }
         }
 

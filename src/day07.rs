@@ -42,7 +42,7 @@ impl Day for Day07 {
         let positions = positions
             .trim()
             .split(',')
-            .map(|x| x.parse())
+            .map(str::parse)
             .collect::<Result<Vec<i64>, _>>()?;
 
         // TODO: sort positions here if that matters

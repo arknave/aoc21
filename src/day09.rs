@@ -77,7 +77,7 @@ fn low_points(grid: GridRef) -> Vec<u8> {
         for col_idx in 0..m {
             let mut is_low = true;
             for (neighbor_row, neighbor_col) in neighbors(row_idx, col_idx) {
-                is_low &= grid[row_idx][col_idx] < grid[neighbor_row][neighbor_col]
+                is_low &= grid[row_idx][col_idx] < grid[neighbor_row][neighbor_col];
             }
 
             if is_low {

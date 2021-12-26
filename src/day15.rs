@@ -10,6 +10,12 @@ type Grid = Vec<Vec<u8>>;
 type GridRef<'a> = &'a [Vec<u8>];
 
 fn shortest_path(grid: GridRef) -> u64 {
+    // TODO: rework this so you dont have to pass in the array every time
+    #[inline]
+    fn get_dist(dist: &[Vec<u64>], pos: &(usize, usize)) -> u64 {
+        dist[pos.0][pos.1]
+    }
+
     let n = grid.len();
     let m = grid[0].len();
     assert!(grid.iter().all(|row| row.len() == m));
@@ -39,12 +45,6 @@ fn shortest_path(grid: GridRef) -> u64 {
     let mut dist = vec![vec![u64::MAX; m]; n];
     dist[0][0] = 0;
 
-    // TODO: rework this so you dont have to pass in the array every time
-    #[inline]
-    fn get_dist(dist: &[Vec<u64>], pos: &(usize, usize)) -> u64 {
-        dist[pos.0][pos.1]
-    }
-
     while !heap.is_empty() {
         let (cur_dist, pos) = heap.pop().unwrap().0;
         if get_dist(&dist, &pos) != cur_dist {
@@ -52,7 +52,7 @@ fn shortest_path(grid: GridRef) -> u64 {
         }
 
         for neighbor in neighbors(pos) {
-            let new_dist = cur_dist + (grid[neighbor.0][neighbor.1] as u64);
+            let new_dist = cur_dist + u64::from(grid[neighbor.0][neighbor.1]);
             if new_dist < get_dist(&dist, &neighbor) {
                 dist[neighbor.0][neighbor.1] = new_dist;
                 heap.push(Reverse((new_dist, neighbor)));

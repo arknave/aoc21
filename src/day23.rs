@@ -144,6 +144,16 @@ impl StateInfo {
         coeff * (dist as u64)
     }
 
+    fn is_done(&self, state: &[u8]) -> bool {
+        state.iter().take(HALL_LEN).all(|&x| x == EMPTY)
+            && (0..NUM_SLOTS).all(|slot| {
+                let start = self.slot_tip(slot);
+                let slice = &state[start..start + self.depth];
+
+                slice.iter().all(|&c| usize::from(c) == slot)
+            })
+    }
+
     fn heuristic(&self, state: &[u8]) -> u64 {
         state
             .iter()
@@ -172,7 +182,7 @@ impl StateInfo {
 fn build_state(slots: &[Vec<u8>; NUM_SLOTS]) -> Vec<u8> {
     iter::repeat(EMPTY)
         .take(HALL_LEN)
-        .chain(slots.iter().flat_map(|slot| slot.iter().cloned()))
+        .chain(slots.iter().flat_map(|slot| slot.iter().copied()))
         .collect()
 }
 
@@ -209,19 +219,9 @@ fn solve(slots: &[Vec<u8>; NUM_SLOTS]) -> u64 {
     let seed_heuristic = seed_info.heuristic(&seed);
     heap.push(Reverse((seed_heuristic, 0, seed)));
 
-    fn is_done(state_info: &StateInfo, state: &[u8]) -> bool {
-        state.iter().take(HALL_LEN).all(|&x| x == EMPTY)
-            && (0..NUM_SLOTS).all(|slot| {
-                let start = state_info.slot_tip(slot);
-                let slice = &state[start..start + state_info.depth];
-
-                slice.iter().all(|&c| usize::from(c) == slot)
-            })
-    }
-
     while let Some(Reverse((_, dist, state))) = heap.pop() {
         let state_info = StateInfo::new(&state);
-        if is_done(&state_info, &state) {
+        if state_info.is_done(&state) {
             return dist;
         }
 

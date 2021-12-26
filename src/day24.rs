@@ -42,9 +42,12 @@ fn solve(data: &[(i64, i64)], is_maximum: bool) -> i64 {
             digits
                 .iter()
                 .flat_map(|&d| {
-                    zs.iter().filter_map(move |(&z, &v)| match z <= CAP {
-                        true => Some((step(z, d, c1, c2), 10 * v + d)),
-                        false => None,
+                    zs.iter().filter_map(move |(&z, &v)| {
+                        if z <= CAP {
+                            Some((step(z, d, c1, c2), 10 * v + d))
+                        } else {
+                            None
+                        }
                     })
                 })
                 .collect()

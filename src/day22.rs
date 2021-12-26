@@ -31,9 +31,9 @@ impl FromStr for Command {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts: Vec<&str> = s.split_whitespace().collect();
-        let command_type = match parts[0] {
-            "on" => Ok(CommandType::On),
-            "off" => Ok(CommandType::Off),
+        let command_type = match parts.get(0) {
+            Some(&"on") => Ok(CommandType::On),
+            Some(&"off") => Ok(CommandType::Off),
             _ => Err(ParseInputError(s.to_string())),
         }?;
 

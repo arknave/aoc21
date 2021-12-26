@@ -57,39 +57,39 @@ use crate::day23::*;
 use crate::day24::*;
 use crate::day25::*;
 
-fn run<D: Day>(day: D) -> Result<(String, String), Box<dyn Error>> {
-    Ok((day.part1(), day.part2()))
+fn run<D: Day>(day: &D) -> (String, String) {
+    (day.part1(), day.part2())
 }
 
 fn run_day<R: BufRead>(day: u8, reader: &mut R) -> Result<(String, String), Box<dyn Error>> {
-    match day {
-        1 => run(Day01::new(reader)?),
-        2 => run(Day02::new(reader)?),
-        3 => run(Day03::new(reader)?),
-        4 => run(Day04::new(reader)?),
-        5 => run(Day05::new(reader)?),
-        6 => run(Day06::new(reader)?),
-        7 => run(Day07::new(reader)?),
-        8 => run(Day08::new(reader)?),
-        9 => run(Day09::new(reader)?),
-        10 => run(Day10::new(reader)?),
-        11 => run(Day11::new(reader)?),
-        12 => run(Day12::new(reader)?),
-        13 => run(Day13::new(reader)?),
-        14 => run(Day14::new(reader)?),
-        15 => run(Day15::new(reader)?),
-        16 => run(Day16::new(reader)?),
-        17 => run(Day17::new(reader)?),
-        18 => run(Day18::new(reader)?),
-        19 => run(Day19::new(reader)?),
-        20 => run(Day20::new(reader)?),
-        21 => run(Day21::new(reader)?),
-        22 => run(Day22::new(reader)?),
-        23 => run(Day23::new(reader)?),
-        24 => run(Day24::new(reader)?),
-        25 => run(Day25::new(reader)?),
+    Ok(match day {
+        1 => run(&Day01::new(reader)?),
+        2 => run(&Day02::new(reader)?),
+        3 => run(&Day03::new(reader)?),
+        4 => run(&Day04::new(reader)?),
+        5 => run(&Day05::new(reader)?),
+        6 => run(&Day06::new(reader)?),
+        7 => run(&Day07::new(reader)?),
+        8 => run(&Day08::new(reader)?),
+        9 => run(&Day09::new(reader)?),
+        10 => run(&Day10::new(reader)?),
+        11 => run(&Day11::new(reader)?),
+        12 => run(&Day12::new(reader)?),
+        13 => run(&Day13::new(reader)?),
+        14 => run(&Day14::new(reader)?),
+        15 => run(&Day15::new(reader)?),
+        16 => run(&Day16::new(reader)?),
+        17 => run(&Day17::new(reader)?),
+        18 => run(&Day18::new(reader)?),
+        19 => run(&Day19::new(reader)?),
+        20 => run(&Day20::new(reader)?),
+        21 => run(&Day21::new(reader)?),
+        22 => run(&Day22::new(reader)?),
+        23 => run(&Day23::new(reader)?),
+        24 => run(&Day24::new(reader)?),
+        25 => run(&Day25::new(reader)?),
         _ => panic!("Unsupported day {}", day),
-    }
+    })
 }
 
 fn start() -> Result<(), Box<dyn Error>> {

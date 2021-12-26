@@ -42,9 +42,9 @@ fn match_scanners(
     for perm in PERMS {
         for flip in FLIPS {
             let fixed: Vec<Point3D> = other.iter().map(|p| p.transform(perm, flip)).collect();
-            for source in scanner.iter() {
-                for dest in fixed.iter() {
-                    let center = *source - *dest;
+            for &source in scanner {
+                for dest in &fixed {
+                    let center = source - *dest;
                     let shifted: Vec<Point3D> = fixed.iter().map(|p| *p + center).collect();
                     let found = shifted.iter().filter(|p| scanner.contains(p)).count();
 
@@ -80,7 +80,7 @@ impl Day19 {
         let mut fixed = vec![HashSet::new(); n];
 
         vis[0] = true;
-        fixed[0] = scanners[0].iter().cloned().collect();
+        fixed[0] = scanners[0].iter().copied().collect();
 
         let mut stk = vec![0];
         while !stk.is_empty() {
@@ -109,7 +109,7 @@ impl Day for Day19 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
         let lines: Vec<String> = reader.lines().collect::<io::Result<_>>()?;
         let scanners: Vec<Vec<Point3D>> = lines
-            .split(|line| line.is_empty())
+            .split(String::is_empty)
             .map(|scanner| {
                 scanner[1..]
                     .iter()
@@ -122,7 +122,7 @@ impl Day for Day19 {
     }
 
     fn part1(&self) -> String {
-        let all_points: HashSet<Point3D> = self.fixed_points.iter().flatten().cloned().collect();
+        let all_points: HashSet<Point3D> = self.fixed_points.iter().flatten().copied().collect();
 
         all_points.len().to_string()
     }
