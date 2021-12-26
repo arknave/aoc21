@@ -65,7 +65,7 @@ pub struct Day19 {
 }
 
 impl Day19 {
-    fn build(scanners: &Vec<Vec<Point3D>>) -> Self {
+    fn build(scanners: &[Vec<Point3D>]) -> Self {
         let (centers, fixed_points) = Self::solve(scanners);
         Self {
             centers,
@@ -73,7 +73,7 @@ impl Day19 {
         }
     }
 
-    fn solve(scanners: &Vec<Vec<Point3D>>) -> (Vec<Point3D>, Vec<HashSet<Point3D>>) {
+    fn solve(scanners: &[Vec<Point3D>]) -> (Vec<Point3D>, Vec<HashSet<Point3D>>) {
         let n = scanners.len();
         let mut vis = vec![false; n];
         let mut centers = vec![Point3D::new(0, 0, 0); n];
@@ -112,7 +112,7 @@ impl Day for Day19 {
             .split(|line| line.is_empty())
             .map(|scanner| {
                 scanner[1..]
-                    .into_iter()
+                    .iter()
                     .map(|pt: &String| pt.parse::<Point3D>())
                     .collect::<Result<_, _>>()
             })

@@ -36,7 +36,7 @@ impl Day20 {
                 let next_points = cands
                     .into_iter()
                     .filter(|cand| {
-                        let idx = score_neighborhood(&points, &cand, background);
+                        let idx = score_neighborhood(&points, cand, background);
                         self.rules[idx] != next_background
                     })
                     .collect();

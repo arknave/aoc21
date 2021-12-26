@@ -83,8 +83,8 @@ impl Day for Day17 {
             (coords[0], coords[1])
         }
 
-        let x_bounds = parse_range(&bounds_desc[2].trim_end_matches(','));
-        let y_bounds = parse_range(&bounds_desc[3]);
+        let x_bounds = parse_range(bounds_desc[2].trim_end_matches(','));
+        let y_bounds = parse_range(bounds_desc[3]);
 
         assert!(x_bounds.0 < x_bounds.1);
         assert!(y_bounds.0 < y_bounds.1);

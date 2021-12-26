@@ -13,7 +13,7 @@ struct Packet {
 #[derive(Debug)]
 enum Data {
     Literal(i64),
-    Operator(Vec<Box<Packet>>),
+    Operator(Vec<Packet>),
 }
 
 impl Packet {
@@ -69,7 +69,7 @@ fn parse_literal(i: &[u8], acc: i64) -> (&[u8], i64) {
     if chunk[0] > 0 {
         parse_literal(rem, res)
     } else {
-        (&rem, res)
+        (rem, res)
     }
 }
 
@@ -100,7 +100,7 @@ fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
                 while !child_slice.is_empty() {
                     let (rem, packet) = parse_packet(child_slice);
                     child_slice = rem;
-                    children.push(Box::new(packet));
+                    children.push(packet);
                 }
 
                 children
@@ -112,7 +112,7 @@ fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
                 for _ in 0..num_children {
                     let (rem, packet) = parse_packet(i);
                     i = rem;
-                    children.push(Box::new(packet));
+                    children.push(packet);
                 }
 
                 children
@@ -133,6 +133,7 @@ fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
     )
 }
 
+#[allow(clippy::identity_op)]
 fn parse_data(s: &str) -> Packet {
     let bits: Vec<u8> = s
         .bytes()
@@ -172,7 +173,7 @@ impl Day for Day16 {
         let mut command = String::new();
         reader.read_line(&mut command)?;
 
-        let packet = parse_data(&command.trim());
+        let packet = parse_data(command.trim());
 
         Ok(Self { packet })
     }
