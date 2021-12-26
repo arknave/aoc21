@@ -126,9 +126,9 @@ fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
     (
         i,
         Packet {
-            version: version,
-            type_id: type_id,
-            data: data,
+            version,
+            type_id,
+            data,
         },
     )
 }
@@ -174,7 +174,7 @@ impl Day for Day16 {
 
         let packet = parse_data(&command.trim());
 
-        Ok(Self { packet: packet })
+        Ok(Self { packet })
     }
 
     fn part1(&self) -> String {

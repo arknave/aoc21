@@ -88,10 +88,7 @@ impl Day for Day14 {
             .map(|line_res| line_res.map(parse_line))
             .collect::<io::Result<Result<_, _>>>()??;
 
-        Ok(Self {
-            template: template,
-            rules: rules,
-        })
+        Ok(Self { template, rules })
     }
 
     fn part1(&self) -> String {

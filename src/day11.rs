@@ -65,7 +65,7 @@ impl Day for Day11 {
             })
             .collect::<io::Result<_>>()?;
 
-        Ok(Self { grid: grid })
+        Ok(Self { grid })
     }
 
     fn part1(&self) -> String {

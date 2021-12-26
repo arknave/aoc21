@@ -68,8 +68,8 @@ impl Day19 {
     fn build(scanners: &Vec<Vec<Point3D>>) -> Self {
         let (centers, fixed_points) = Self::solve(scanners);
         Self {
-            centers: centers,
-            fixed_points: fixed_points,
+            centers,
+            fixed_points,
         }
     }
 

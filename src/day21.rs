@@ -123,7 +123,7 @@ impl Day for Day21 {
             start[idx] = x - 1;
         }
 
-        Ok(Self { start: start })
+        Ok(Self { start })
     }
 
     fn part1(&self) -> String {

@@ -57,7 +57,7 @@ impl FromStr for Command {
             .collect::<Result<_, _>>()?;
 
         Ok(Self {
-            command_type: command_type,
+            command_type,
             bounds: [bounds[0], bounds[1], bounds[2]],
         })
     }
@@ -153,7 +153,7 @@ impl Day for Day22 {
             .map(|line_res| line_res.map(|line| line.parse()))
             .collect::<io::Result<Result<Vec<Command>, _>>>()??;
 
-        Ok(Self { commands: commands })
+        Ok(Self { commands })
     }
 
     fn part1(&self) -> String {

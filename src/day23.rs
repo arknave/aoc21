@@ -63,10 +63,10 @@ impl StateInfo {
         }
 
         Self {
-            depth: depth,
-            can_place: can_place,
-            reach: reach,
-            filled: filled,
+            depth,
+            can_place,
+            reach,
+            filled,
         }
     }
 
@@ -300,7 +300,7 @@ impl Day for Day23 {
             vec![buf[37] - b'A', buf[51] - b'A'],
         ];
 
-        Ok(Self { slots: slots })
+        Ok(Self { slots })
     }
 
     fn part1(&self) -> String {

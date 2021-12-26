@@ -12,7 +12,7 @@ struct Position {
 
 impl Position {
     fn new(pos: Point, vel: Point) -> Self {
-        Self { pos: pos, vel: vel }
+        Self { pos, vel }
     }
 
     fn step(&self) -> Self {
@@ -91,10 +91,7 @@ impl Day for Day17 {
         assert!(0 <= x_bounds.0);
         assert!(y_bounds.1 < 0);
 
-        Ok(Self {
-            x_bounds: x_bounds,
-            y_bounds: y_bounds,
-        })
+        Ok(Self { x_bounds, y_bounds })
     }
 
     fn part1(&self) -> String {

@@ -22,7 +22,7 @@ impl Day for Day01 {
             .map(|line_res| line_res.map(|line| line.parse()))
             .collect::<io::Result<Result<Vec<i64>, _>>>()??;
 
-        Ok(Self { nums: nums })
+        Ok(Self { nums })
     }
 
     fn part1(&self) -> String {

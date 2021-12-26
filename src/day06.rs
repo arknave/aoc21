@@ -38,7 +38,7 @@ impl Day for Day06 {
             state[x as usize] += 1;
         }
 
-        Ok(Self { state: state })
+        Ok(Self { state })
     }
 
     fn part1(&self) -> String {

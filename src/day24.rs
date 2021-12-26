@@ -69,7 +69,7 @@ impl Day for Day24 {
             .collect::<Result<_, _>>()?;
 
         dbg!(&data);
-        Ok(Self { data: data })
+        Ok(Self { data })
     }
 
     fn part1(&self) -> String {

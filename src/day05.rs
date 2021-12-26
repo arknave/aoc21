@@ -37,7 +37,7 @@ impl FromStr for Line {
         let p0 = ps[0];
         let p1 = ps[1];
 
-        Ok(Line { p0: p0, p1: p1 })
+        Ok(Line { p0, p1 })
     }
 }
 
@@ -80,7 +80,7 @@ impl Day for Day05 {
             .map(|line_res| line_res.map(|line| line.parse()))
             .collect::<io::Result<Result<Vec<_>, _>>>()??;
 
-        Ok(Self { lines: lines })
+        Ok(Self { lines })
     }
 
     fn part1(&self) -> String {

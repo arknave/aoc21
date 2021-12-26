@@ -22,7 +22,7 @@ pub struct Point {
 
 impl Point {
     pub fn new(x: i64, y: i64) -> Self {
-        Self { x: x, y: y }
+        Self { x, y }
     }
 
     pub fn get_adj9(&self) -> impl Iterator<Item = Point> + '_ {
@@ -41,7 +41,7 @@ impl FromStr for Point {
         let x = xy[0].parse().map_err(|_e| ParseInputError(s.to_string()))?;
         let y = xy[1].parse().map_err(|_e| ParseInputError(s.to_string()))?;
 
-        Ok(Point { x: x, y: y })
+        Ok(Point { x, y })
     }
 }
 
@@ -56,12 +56,12 @@ impl Point3D {
     }
 
     pub fn transform(&self, perm: [usize; 3], flips: [i64; 3]) -> Self {
-        let mut res = [0; 3];
+        let mut coords = [0; 3];
         for idx in 0..3 {
-            res[idx] = self.coords[perm[idx]] * flips[idx];
+            coords[idx] = self.coords[perm[idx]] * flips[idx];
         }
 
-        Self { coords: res }
+        Self { coords }
     }
 
     pub fn manhattan_dist(&self, other: Self) -> i64 {

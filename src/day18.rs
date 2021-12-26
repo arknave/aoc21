@@ -212,9 +212,7 @@ impl Day for Day18 {
             .map(|line_res| line_res.map(|line| line.parse()))
             .collect::<io::Result<Result<_, _>>>()??;
 
-        Ok(Self {
-            snailfish: snailfish,
-        })
+        Ok(Self { snailfish })
     }
 
     fn part1(&self) -> String {

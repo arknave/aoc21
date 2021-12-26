@@ -46,9 +46,7 @@ impl Day for Day07 {
             .collect::<Result<Vec<i64>, _>>()?;
 
         // TODO: sort positions here if that matters
-        Ok(Self {
-            positions: positions,
-        })
+        Ok(Self { positions })
     }
 
     fn part1(&self) -> String {

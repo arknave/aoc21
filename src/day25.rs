@@ -133,10 +133,10 @@ impl Day for Day25 {
             .collect();
 
         Ok(Self {
-            n: n,
-            m: m,
-            easts: easts,
-            souths: souths,
+            n,
+            m,
+            easts,
+            souths,
         })
     }
 

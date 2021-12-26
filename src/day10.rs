@@ -75,7 +75,7 @@ impl Day for Day10 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
         let chunks: Vec<String> = reader.lines().collect::<io::Result<Vec<_>>>()?;
 
-        Ok(Self { chunks: chunks })
+        Ok(Self { chunks })
     }
 
     fn part1(&self) -> String {

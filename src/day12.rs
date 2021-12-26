@@ -118,7 +118,7 @@ impl Day for Day12 {
             })
             .collect::<io::Result<Vec<_>>>()?;
 
-        Ok(Self { edges: edges })
+        Ok(Self { edges })
     }
 
     fn part1(&self) -> String {

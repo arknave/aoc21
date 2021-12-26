@@ -86,10 +86,7 @@ impl Day for Day13 {
             })
             .collect::<io::Result<Result<_, _>>>()??;
 
-        Ok(Self {
-            points: points,
-            folds: folds,
-        })
+        Ok(Self { points, folds })
     }
 
     fn part1(&self) -> String {

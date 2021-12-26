@@ -102,7 +102,7 @@ impl Day for Day02 {
 
         let end = solve(&commands);
 
-        Ok(Self { end: end })
+        Ok(Self { end })
     }
 
     fn part1(&self) -> String {

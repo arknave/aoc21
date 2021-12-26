@@ -42,10 +42,7 @@ impl FromStr for Pattern {
             return Err(ParsePatternError(s.to_string()));
         }
 
-        Ok(Self {
-            clues: clues,
-            output: output,
-        })
+        Ok(Self { clues, output })
     }
 }
 
@@ -121,7 +118,7 @@ impl Day for Day08 {
             .map(|line_res| line_res.map(|line| line.parse()))
             .collect::<io::Result<Result<Vec<Pattern>, _>>>()??;
 
-        Ok(Self { patterns: patterns })
+        Ok(Self { patterns })
     }
 
     fn part1(&self) -> String {

@@ -89,10 +89,7 @@ impl Day for Day04 {
             })
             .collect();
 
-        Ok(Self {
-            nums: nums,
-            bingos: bingos,
-        })
+        Ok(Self { nums, bingos })
     }
 
     fn part1(&self) -> String {
