@@ -38,3 +38,4 @@ Slowness:
 - Day 20 is also slow :(
 - Day 22 is a little slow. Maybe the inclusion exclusion version would be faster?
 - Day 23 is a slower than I'd like but I don't have much energy
+- Day 25 surely can be sped up by using fewer / smarter hashmaps.
