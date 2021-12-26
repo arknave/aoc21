@@ -19,7 +19,7 @@ fn play_fixed(start: &[u32; 2], sides: u32, max_score: u32) -> (u32, [u32; 2]) {
     }
 
     let mut turns = 0;
-    let mut pos = start.clone();
+    let mut pos = *start;
     let mut score = [0, 0];
 
     let mut player = 0;
@@ -111,16 +111,17 @@ impl Day for Day21 {
     fn new<R: BufRead>(reader: &mut R) -> Result<Self, Box<dyn Error>> {
         let mut start: [u32; 2] = Default::default();
 
-        for idx in 0..2 {
+        for pos in &mut start {
             let mut line = String::new();
             reader.read_line(&mut line)?;
 
             let x: u32 = line
                 .split_whitespace()
                 .last()
-                .ok_or(ParseInputError(line.clone()))?
+                .ok_or_else(|| ParseInputError(line.clone()))?
                 .parse()?;
-            start[idx] = x - 1;
+
+            *pos = x - 1;
         }
 
         Ok(Self { start })

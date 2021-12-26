@@ -73,7 +73,7 @@ fn solve(commands: &[Command]) -> u64 {
             })
             .collect();
 
-        bounds.sort();
+        bounds.sort_unstable();
         bounds.dedup();
 
         bounds
@@ -117,19 +117,19 @@ fn solve(commands: &[Command]) -> u64 {
         // TODO: eugh
         let x_start = xs.partition_point(|x| x < &command.bounds[0].0);
         for x_idx in x_start..x_segs {
-            if !(xs[x_idx + 1] <= command.bounds[0].1) {
+            if xs[x_idx + 1] > command.bounds[0].1 {
                 break;
             }
 
             let y_start = ys.partition_point(|y| y < &command.bounds[1].0);
             for y_idx in y_start..y_segs {
-                if !(ys[y_idx + 1] <= command.bounds[1].1) {
+                if ys[y_idx + 1] > command.bounds[1].1 {
                     break;
                 }
 
                 let z_start = zs.partition_point(|z| z < &command.bounds[2].0);
                 for z_idx in z_start..z_segs {
-                    if !(zs[z_idx + 1] <= command.bounds[2].1) {
+                    if zs[z_idx + 1] > command.bounds[2].1 {
                         break;
                     }
 

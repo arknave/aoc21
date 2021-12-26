@@ -207,7 +207,7 @@ fn solve(slots: &[Vec<u8>; NUM_SLOTS]) -> u64 {
 
     let mut heap: BinaryHeap<Reverse<(u64, u64, Vec<u8>)>> = BinaryHeap::new();
     let seed_heuristic = seed_info.heuristic(&seed);
-    heap.push(Reverse((seed_heuristic, 0, seed.clone())));
+    heap.push(Reverse((seed_heuristic, 0, seed)));
 
     fn is_done(state_info: &StateInfo, state: &[u8]) -> bool {
         state.iter().take(HALL_LEN).all(|&x| x == EMPTY)
@@ -230,7 +230,7 @@ fn solve(slots: &[Vec<u8>; NUM_SLOTS]) -> u64 {
         }
 
         // for each hallway spot, see if we can move the amphipod to the correct slot
-        let to_slot: Vec<(u64, Vec<u8>)> = (0..HALL_LEN)
+        let to_slot = (0..HALL_LEN)
             .filter(|&src| state[src] != EMPTY && state_info.can_move_to_slot(src, state[src]))
             .map(|src| {
                 let mut next_state: Vec<u8> = state.clone();
@@ -241,11 +241,10 @@ fn solve(slots: &[Vec<u8>; NUM_SLOTS]) -> u64 {
                 let weight = state_info.get_dist(state[src], src, dest);
 
                 (dist + weight, next_state)
-            })
-            .collect();
+            });
 
         // for each slot, try and move the top amphipod in the slot to the hallway.
-        let to_hall: Vec<(u64, Vec<u8>)> = (0..NUM_SLOTS)
+        let to_hall = (0..NUM_SLOTS)
             .filter(|slot| !state_info.can_place[*slot])
             .flat_map(|slot| {
                 let src = state_info.top_amphipod(slot);
@@ -264,10 +263,9 @@ fn solve(slots: &[Vec<u8>; NUM_SLOTS]) -> u64 {
                     })
                     .collect::<Vec<_>>()
                     .into_iter()
-            })
-            .collect();
+            });
 
-        for (cost, next_state) in to_slot.into_iter().chain(to_hall.into_iter()) {
+        for (cost, next_state) in to_slot.chain(to_hall) {
             let cur_cost = dists.entry(next_state.clone()).or_insert(u64::MAX);
 
             if cost < *cur_cost {
