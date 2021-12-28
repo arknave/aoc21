@@ -53,18 +53,18 @@ impl Packet {
 }
 
 // TODO: generalize with num crate
-fn add_bit_u8(v: u8, b: &u8) -> u8 {
-    (v << 1) | *b
+fn add_bit_u8(v: u8, b: u8) -> u8 {
+    (v << 1) | b
 }
 
-fn add_bit_i64(v: i64, b: &u8) -> i64 {
-    (v << 1) | i64::from(*b)
+fn add_bit_i64(v: i64, b: u8) -> i64 {
+    (v << 1) | i64::from(b)
 }
 
 fn parse_literal(i: &[u8], acc: i64) -> (&[u8], i64) {
     let chunk = &i[0..5];
     let rem = &i[5..];
-    let val = chunk[1..].iter().fold(acc, add_bit_i64);
+    let val = chunk[1..].iter().copied().fold(acc, add_bit_i64);
 
     if chunk[0] > 0 {
         parse_literal(rem, val)
@@ -75,8 +75,8 @@ fn parse_literal(i: &[u8], acc: i64) -> (&[u8], i64) {
 
 // TODO: nom?
 fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
-    let version = i[0..3].iter().fold(0, add_bit_u8);
-    let type_id = i[3..6].iter().fold(0, add_bit_u8);
+    let version = i[0..3].iter().copied().fold(0, add_bit_u8);
+    let type_id = i[3..6].iter().copied().fold(0, add_bit_u8);
 
     let mut i = &i[6..];
 
@@ -90,7 +90,7 @@ fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
 
         let children = match len_type_id {
             0 => {
-                let packet_len = i[..15].iter().fold(0, add_bit_i64) as usize;
+                let packet_len = i[..15].iter().copied().fold(0, add_bit_i64) as usize;
                 i = &i[15..];
 
                 let mut children = vec![];
@@ -106,7 +106,7 @@ fn parse_packet(i: &[u8]) -> (&[u8], Packet) {
                 children
             }
             1 => {
-                let num_children = i[..11].iter().fold(0, add_bit_i64);
+                let num_children = i[..11].iter().copied().fold(0, add_bit_i64);
                 i = &i[11..];
                 let mut children = vec![];
                 for _ in 0..num_children {
