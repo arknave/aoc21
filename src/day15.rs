@@ -1,13 +1,10 @@
 use crate::day::Day;
+use crate::util::{Grid, GridRef};
 
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::error::Error;
 use std::io::{self, BufRead};
-
-// TODO: write some grid module if this is useful elsewhere
-type Grid = Vec<Vec<u8>>;
-type GridRef<'a> = &'a [Vec<u8>];
 
 fn shortest_path(grid: GridRef) -> u64 {
     // TODO: rework this so you dont have to pass in the array every time

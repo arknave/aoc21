@@ -1,4 +1,6 @@
 use crate::day::Day;
+use crate::util::{Grid, GridRef};
+
 use std::error::Error;
 use std::io::{self, BufRead};
 
@@ -44,10 +46,6 @@ impl UnionFind {
             .collect()
     }
 }
-
-// TODO: write some grid module if this is useful elsewhere
-type Grid = Vec<Vec<u8>>;
-type GridRef<'a> = &'a [Vec<u8>];
 
 fn low_points(grid: GridRef) -> Vec<u8> {
     let n = grid.len();

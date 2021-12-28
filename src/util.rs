@@ -122,3 +122,6 @@ impl FromStr for Point3D {
         Ok(Self::new(x, y, z))
     }
 }
+
+pub type Grid = Vec<Vec<u8>>;
+pub type GridRef<'a> = &'a [Vec<u8>];

@@ -1,12 +1,10 @@
 use crate::day::Day;
+use crate::util::Grid;
 
 use std::collections::HashSet;
 use std::error::Error;
 use std::io::{self, BufRead};
 use std::iter;
-
-// TODO: write some grid module if this is useful elsewhere
-type Grid = Vec<Vec<u8>>;
 
 const fn inc(x: usize, m: usize) -> usize {
     if x + 1 >= m {

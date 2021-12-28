@@ -1,10 +1,8 @@
 use crate::day::Day;
+use crate::util::{Grid, GridRef};
+
 use std::error::Error;
 use std::io::{self, BufRead};
-
-// TODO: write some grid module if this is useful elsewhere
-type Grid = Vec<Vec<u8>>;
-type GridRef<'a> = &'a [Vec<u8>];
 
 fn step(grid: GridRef) -> (Grid, u32) {
     let n = grid.len();
