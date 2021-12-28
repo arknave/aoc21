@@ -45,8 +45,8 @@ impl Day25 {
         let n = self.n;
         let m = self.m;
 
-        let mut easts: HashSet<(usize, usize)> = self.easts.iter().copied().collect();
-        let mut souths: HashSet<(usize, usize)> = self.souths.iter().copied().collect();
+        let mut easts = self.easts.clone();
+        let mut souths = self.souths.clone();
 
         let mut steps = 0;
         loop {
@@ -54,8 +54,9 @@ impl Day25 {
 
             let mut changed = false;
 
-            let blocked = &easts | &souths;
-            let new_easts = easts
+            let blocked: HashSet<(usize, usize)> =
+                easts.iter().chain(souths.iter()).copied().collect();
+            let new_easts: Vec<(usize, usize)> = easts
                 .iter()
                 .map(|&(r, c)| {
                     if blocked.contains(&(r, inc(c, m))) {
@@ -67,8 +68,9 @@ impl Day25 {
                 })
                 .collect();
 
-            let blocked = &new_easts | &souths;
-            let new_souths = souths
+            let blocked: HashSet<(usize, usize)> =
+                new_easts.iter().chain(souths.iter()).copied().collect();
+            let new_souths: Vec<(usize, usize)> = souths
                 .iter()
                 .map(|&(r, c)| {
                     if blocked.contains(&(inc(r, n), c)) {
