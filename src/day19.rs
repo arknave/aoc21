@@ -1,7 +1,7 @@
 use crate::day::Day;
 use crate::util::Point3D;
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::io::{self, BufRead};
 
@@ -42,15 +42,22 @@ fn match_scanners(
     for perm in PERMS {
         for flip in FLIPS {
             let fixed: Vec<Point3D> = other.iter().map(|p| p.transform(perm, flip)).collect();
+            let mut freq = HashMap::new();
             for &source in scanner {
                 for dest in &fixed {
                     let center = source - *dest;
-                    let shifted: Vec<Point3D> = fixed.iter().map(|p| *p + center).collect();
-                    let found = shifted.iter().filter(|p| scanner.contains(p)).count();
 
-                    if found >= 12 {
-                        return Some((center, shifted));
-                    }
+                    freq.insert(center, freq.get(&center).unwrap_or(&0) + 1);
+                }
+            }
+
+            let found = freq.iter().max_by(|(_, v1), (_, v2)| v1.cmp(v2));
+
+            if let Some((&center, &freq)) = found {
+                if freq >= 12 {
+                    let shifted: Vec<Point3D> = fixed.iter().map(|p| *p + center).collect();
+
+                    return Some((center, shifted));
                 }
             }
         }
