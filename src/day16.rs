@@ -160,7 +160,7 @@ fn version_sum(packet: &Packet) -> i64 {
     i64::from(packet.version)
         + match &packet.data {
             Data::Literal(_) => 0,
-            Data::Operator(children) => children.iter().map(|child| version_sum(child)).sum(),
+            Data::Operator(children) => children.iter().map(version_sum).sum(),
         }
 }
 
